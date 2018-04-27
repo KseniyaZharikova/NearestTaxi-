@@ -1,15 +1,14 @@
-package com.example.kseniya.nearesttaxi;
+package com.example.kseniya.nearesttaxi.ui;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.kseniya.nearesttaxi.R;
 
 public class ActivityLocation extends AppCompatActivity {
     private LocationManager locationManager;

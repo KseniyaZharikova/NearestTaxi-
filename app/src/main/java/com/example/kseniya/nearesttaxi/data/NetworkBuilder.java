@@ -1,4 +1,4 @@
-package com.example.kseniya.nearesttaxi;
+package com.example.kseniya.nearesttaxi.data;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public final class NetworkBuilder {
-    private  static RetrofitService  service = null;
+    private  static RetrofitService service = null;
     public  static RetrofitService initService (){
         if (service==null) {
             service = new Retrofit.Builder()
