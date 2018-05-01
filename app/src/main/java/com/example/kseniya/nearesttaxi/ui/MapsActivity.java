@@ -1,7 +1,9 @@
 package com.example.kseniya.nearesttaxi.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,14 +30,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowLongClickListener {
 
     private GoogleMap mMap;
     private RetrofitService service;
-    private Marker marker;
     double lat;
     double lon;
-    Main main;
+    String phone;
 
 
     @Override
@@ -46,13 +47,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
+        googleMap.setOnInfoWindowLongClickListener(this);
         lat = getIntent().getDoubleExtra("location1", 0);
         lon = getIntent().getDoubleExtra("location2", 0);
 
@@ -74,6 +77,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void getInformationTaxiGPS() {
         service.getInformationTaxi(lat, lon)
+
+
                 .enqueue(new Callback<Main>() {
                     @Override
                     public void onResponse(Call<Main> call, Response<Main> response) {
@@ -82,18 +87,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 for (Driver driver : company.getDrivers()) {
                                     LatLng cars = new LatLng(driver.getLat(),
                                             driver.getLon());
-                                    MarkerOptions markerOptions = new MarkerOptions();
-                                    mMap.addMarker(markerOptions.position(cars)
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(cars)
                                             .flat(true)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon)));
+                                            .title(company.getName().toString())
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon))
+                                            .snippet(company.getContacts().get(1).getContact().toString()));
+                                    marker.showInfoWindow();
+                                    phone= marker.getSnippet();
                                 }
-                                company.setName(company.getName().toString());
-
-                                InfoWindownAdapter infoWindownAdapter = new InfoWindownAdapter(getApplicationContext()
-                                        ,main.getCompanies());
-                                mMap.setInfoWindowAdapter(infoWindownAdapter);
-                                marker.setTag(company);
-                                marker.showInfoWindow();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Сервер не отвечает", Toast.LENGTH_LONG).show();
@@ -106,15 +107,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
     }
-}
-//        Company info = model.getCompanies().get(i);
-//        info.setIcon(model.getCompanies().get(i).getIcon());
-//        info.setName(model.getCompanies().get(i).getName());
 
-//        InfoWindownAdapter infoWindownAdapter = new InfoWindownAdapter(getApplicationContext()
-//        ,model.getCompanies());
-//        mMap.setInfoWindowAdapter(infoWindownAdapter);
-//        Marker marker = mMap.addMarker(markerOptions.position(cars));
-//        marker.setTag(info);
-//        marker.showInfoWindow();
+    @Override
+    public void onInfoWindowLongClick(Marker marker) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+        startActivity(intent);
+    }
+}
+
 

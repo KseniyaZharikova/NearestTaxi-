@@ -21,6 +21,7 @@ public class InfoWindownAdapter implements GoogleMap.InfoWindowAdapter {
     List<Company> list;
 
 
+
     public InfoWindownAdapter(Context ctx, List<Company> company) {
         this.context = ctx;
         this.list = company;
@@ -38,12 +39,13 @@ public class InfoWindownAdapter implements GoogleMap.InfoWindowAdapter {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.map_custom_infowindow, null);
         ImageView img = view.findViewById(R.id.image);
-        TextView title = view.findViewById(R.id.title);
+        TextView title =  view.findViewById(R.id.title);
 
 
         Company model = (Company) marker.getTag();
-        // Picasso.get().load(model.getIcon()).into(img);
+       // Picasso.get().load(model.getIcon()).into(img);
         title.setText(model.getName().toString());
+
 
 
         return view;
