@@ -72,7 +72,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         getInformationTaxiGPS();
     }
+
     private void getInformationTaxiGPS() {
+
         service.getInformationTaxi(lat, lon)
                 .enqueue(new Callback<Main>() {
                     @Override
@@ -86,7 +88,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     mMarker = mMap.addMarker(markerOptions.position(cars)
                                             .flat(true)
                                             .title(company.getName().toString())
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon)));
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon))
+                                            .snippet(company.getContacts().get(1).toString()));
 
                                     InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(getApplicationContext());
                                     mMap.setInfoWindowAdapter(infoWindowAdapter);
@@ -127,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowLongClick(Marker marker) {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", marker.getSnippet(), null));
         startActivity(intent);
     }
 }
