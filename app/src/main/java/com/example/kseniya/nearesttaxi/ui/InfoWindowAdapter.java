@@ -2,10 +2,12 @@ package com.example.kseniya.nearesttaxi.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kseniya.nearesttaxi.R;
 import com.example.kseniya.nearesttaxi.models.Company;
@@ -16,21 +18,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class InfoWindownAdapter implements GoogleMap.InfoWindowAdapter {
+public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     Context context;
     List<Company> list;
 
 
 
-    public InfoWindownAdapter(Context ctx, List<Company> company) {
+    public InfoWindowAdapter(Context ctx) {
         this.context = ctx;
-        this.list = company;
+
 
     }
 
 
     @Override
     public View getInfoWindow(Marker marker) {
+
         return null;
     }
 
@@ -43,10 +46,11 @@ public class InfoWindownAdapter implements GoogleMap.InfoWindowAdapter {
 
 
         Company model = (Company) marker.getTag();
-       // Picasso.get().load(model.getIcon()).into(img);
-        title.setText(model.getName().toString());
 
-
+        if (model != null) {
+            Picasso.get().load(model.getIcon().toString()).into(img);
+            title.setText(model.getName().toString());
+        }
 
         return view;
     }

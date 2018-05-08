@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">NearestTaxi</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">NearestTaxi</string>
     <string name="google_key">AIzaSyA8CUTOqSLG9adtV0xTgRDIWQW8IgpPyqc</string>
 </resources>
