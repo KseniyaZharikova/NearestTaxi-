@@ -94,6 +94,7 @@ public class ActivityLocation extends AppCompatActivity {
             intent.putExtra("location1", location.getLatitude());
             intent.putExtra("location2", location.getLongitude());
             startActivity(intent);
+            finish();
         }
     }
 }
