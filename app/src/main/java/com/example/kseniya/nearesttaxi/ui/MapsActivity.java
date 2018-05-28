@@ -45,24 +45,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         service = TaxiApplication.get(getApplicationContext()).getService();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         markerOptions = new MarkerOptions();
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
-        googleMap.setOnInfoWindowLongClickListener(this);
         lat = getIntent().getDoubleExtra("location1", 0);
         lon = getIntent().getDoubleExtra("location2", 0);
 
         LatLng bishkek = new LatLng(lat, lon);
-        mMap.addMarker(new MarkerOptions().position(bishkek).title("Marker in Bishkek"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(bishkek));
         mMap.setMaxZoomPreference(18);
         mMap.setMinZoomPreference(15);
+        mMap.setOnInfoWindowLongClickListener(this);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
@@ -80,24 +80,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onResponse(Call<Main> call, Response<Main> response) {
                         if (response.isSuccessful() && response.body() != null) {
-
                             for (Company company : response.body().getCompanies()) {
+
+                                phone = company.getContacts().get(1).getContact().toString();
+
                                 for (Driver driver : company.getDrivers()) {
+
                                     LatLng cars = new LatLng(driver.getLat(),
                                             driver.getLon());
                                     mMarker = mMap.addMarker(markerOptions.position(cars)
                                             .flat(true)
-                                            .title(company.getName().toString())
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon)));
 
                                     InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(getApplicationContext());
                                     mMap.setInfoWindowAdapter(infoWindowAdapter);
-                                    Company model = new Company();
-                                    model.setName(company.getName());
-                                    model.setIcon(company.getIcon());
-                                    mMarker = mMap.addMarker(markerOptions);
                                     mMarker.setTag(company);
-                                    mMarker.showInfoWindow();
                                 }
                             }
                         } else {
@@ -109,27 +106,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onFailure(Call<Main> call, Throwable throwable) {
                         Toast.makeText(getApplicationContext(), "onFailure", Toast.LENGTH_LONG).show();
                     }
+
                 });
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
 
-
-                Company model = (Company) marker.getTag();
-
-                if (model != null) {
-                    Log.e("adapter", "show is " + model.getName());
-                    Log.e("adapter", "show is " + model.getDrivers().size());
-                    marker.showInfoWindow();
-                }
-                return false;
-            }
-        });
     }
 
     @Override
     public void onInfoWindowLongClick(Marker marker) {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", marker.getSnippet(), null));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
     }
 }
