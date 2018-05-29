@@ -14,6 +14,7 @@ import com.example.kseniya.nearesttaxi.R;
 import com.example.kseniya.nearesttaxi.TaxiApplication;
 import com.example.kseniya.nearesttaxi.data.RetrofitService;
 import com.example.kseniya.nearesttaxi.models.Company;
+import com.example.kseniya.nearesttaxi.models.Contact;
 import com.example.kseniya.nearesttaxi.models.Driver;
 import com.example.kseniya.nearesttaxi.models.Main;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,10 +83,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (response.isSuccessful() && response.body() != null) {
                             for (Company company : response.body().getCompanies()) {
 
-                                phone = company.getContacts().get(1).getContact().toString();
-
                                 for (Driver driver : company.getDrivers()) {
-
                                     LatLng cars = new LatLng(driver.getLat(),
                                             driver.getLon());
                                     mMarker = mMap.addMarker(markerOptions.position(cars)
@@ -95,7 +93,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(getApplicationContext());
                                     mMap.setInfoWindowAdapter(infoWindowAdapter);
                                     mMarker.setTag(company);
+                                    for (Contact contact : company.getContacts()) {
+                                        phone = contact.getContact();
+
+                                    }
+                                    onInfoWindowLongClick(mMarker);
+
                                 }
+
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Сервер не отвечает", Toast.LENGTH_LONG).show();

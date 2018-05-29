@@ -1,5 +1,4 @@
 package com.example.kseniya.nearesttaxi.ui;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,7 +14,7 @@ import com.caverock.androidsvg.SVGParseException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SvgBitmapDecoder implements ResourceDecoder{
+public class SvgBitmapDecoder implements ResourceDecoder<InputStream, Bitmap> {
     private final BitmapPool bitmapPool;
 
     public SvgBitmapDecoder(Context context) {
@@ -39,16 +38,11 @@ public class SvgBitmapDecoder implements ResourceDecoder{
     }
 
     private Bitmap findBitmap(int width, int height) {
-        Bitmap bitmap = bitmapPool.get(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = bitmapPool.get(30, 30, Bitmap.Config.ARGB_8888);
         if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(30, 30, Bitmap.Config.ARGB_8888);
         }
         return bitmap;
-    }
-
-    @Override
-    public Resource decode(Object source, int width, int height) throws IOException {
-        return null;
     }
 
     @Override
