@@ -1,32 +1,25 @@
 package com.example.kseniya.nearesttaxi.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
-import com.bumptech.glide.load.resource.gif.GifResourceDecoder;
-import com.bumptech.glide.load.resource.gifbitmap.GifBitmapWrapperResourceDecoder;
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParser;
 import com.example.kseniya.nearesttaxi.R;
 import com.example.kseniya.nearesttaxi.models.Company;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.squareup.picasso.Picasso;
+
 public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     Context context;
+
     public InfoWindowAdapter(Context ctx) {
         this.context = ctx;
     }
+
     @Override
     public View getInfoWindow(Marker marker) {
 
@@ -43,15 +36,14 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         final TextView phone = view.findViewById(R.id.phone);
         Company model = (Company) marker.getTag();
         if (model != null) {
-            BitmapPool pool =  Glide.get(context).getBitmapPool();
+            BitmapPool pool = Glide.get(context).getBitmapPool();
             if (model.getName().equals("NambaTaxi")) {
-
                 Glide.with(img.getContext())
                         .load(model.getIcon())
                         .asBitmap()
                         .override(50, 50)
                         .animate(android.R.anim.fade_in)
-                        .imageDecoder(new SvgBitmapDecoder(pool)) // implements ResourceDecoder<InputStream, Bitmap>
+                        .imageDecoder(new SvgBitmapDecoder(pool))
                         .into(img);
             } else {
                 Glide.with(img.getContext())
@@ -59,9 +51,9 @@ public class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                         .override(50, 50)
                         .into(img);
             }
-            title.setText(model.getName().toString());
-            sms.setText(model.getContacts().get(0).getContact().toString());
-            phone.setText(model.getContacts().get(1).getContact().toString());
+            title.setText(model.getName());
+            sms.setText(model.getContacts().get(0).getContact());
+            phone.setText(model.getContacts().get(1).getContact());
         }
         return view;
     }

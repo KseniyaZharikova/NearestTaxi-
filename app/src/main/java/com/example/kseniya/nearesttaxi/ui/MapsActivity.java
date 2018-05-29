@@ -14,7 +14,6 @@ import com.example.kseniya.nearesttaxi.R;
 import com.example.kseniya.nearesttaxi.TaxiApplication;
 import com.example.kseniya.nearesttaxi.data.RetrofitService;
 import com.example.kseniya.nearesttaxi.models.Company;
-import com.example.kseniya.nearesttaxi.models.Contact;
 import com.example.kseniya.nearesttaxi.models.Driver;
 import com.example.kseniya.nearesttaxi.models.Main;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,8 +81,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onResponse(Call<Main> call, Response<Main> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             for (Company company : response.body().getCompanies()) {
-
                                 for (Driver driver : company.getDrivers()) {
+
                                     LatLng cars = new LatLng(driver.getLat(),
                                             driver.getLon());
                                     mMarker = mMap.addMarker(markerOptions.position(cars)
@@ -93,14 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     InfoWindowAdapter infoWindowAdapter = new InfoWindowAdapter(getApplicationContext());
                                     mMap.setInfoWindowAdapter(infoWindowAdapter);
                                     mMarker.setTag(company);
-                                    for (Contact contact : company.getContacts()) {
-                                        phone = contact.getContact();
-
-                                    }
-                                    onInfoWindowLongClick(mMarker);
-
                                 }
-
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Сервер не отвечает", Toast.LENGTH_LONG).show();
@@ -118,6 +110,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowLongClick(Marker marker) {
+        Company model1 = (Company) marker.getTag();
+        phone = (model1.getContacts().get(1).getContact().toString());
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
     }

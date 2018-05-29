@@ -12,9 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public final class NetworkBuilder {
-    private  static RetrofitService service = null;
-    public  static RetrofitService initService (){
-        if (service==null) {
+    private static RetrofitService service = null;
+
+    public static RetrofitService initService() {
+        if (service == null) {
             service = new Retrofit.Builder()
                     .baseUrl("http://openfreecabs.org")
                     .client(getClient())
@@ -24,11 +25,12 @@ public final class NetworkBuilder {
         }
         return service;
     }
-    private static OkHttpClient  getClient(){
+
+    private static OkHttpClient getClient() {
         return new OkHttpClient.Builder()
                 .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(30,TimeUnit.SECONDS)
-                .writeTimeout(30,TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
